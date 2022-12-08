@@ -1,0 +1,24 @@
+AWS training & certification link:
+https://us-east-1.student.classrooms.aws.training/class/gUoX8zqZTrpHpc6vfv7oMR
+
+AWS training link :
+https://www.aws.training/certification
+
+Student guide:
+https://online.vitalsource.com/reader/books/200-DODEVA-41-EN-SG-E/pageid/34
+
+
+ap-south-1
+mvn -q exec:java -Dexec.mainClass="dev.labs.s3.createBucket"
+
+
+apiURL='https://a04boskdh0.execute-api.ap-northeast-1.amazonaws.com/Prod'
+CognitoPoolId='ap-northeast-1_BMbDIzIzF'
+
+apiURL='https://a04boskdh0.execute-api.ap-northeast-1.amazonaws.com/Prod'
+
+AppClientId='16m3hmebbc1vet1a4elllelueu'
+22igsnaem6f54ukns3is8h8j9e
+
+
+aws cognito-idp sign-up --client-id $AppClientId --username student --password student --email abc@xyz.com
