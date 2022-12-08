@@ -1,0 +1,39 @@
+set environment variables:------------------
+set env-parms=TABLE_NAME=Notes, MP3_BUCKET_NAME=<MP3BucketName>
+set env-parms=TABLE_NAME=Notes, MP3_BUCKET_NAME=labstack-itkypjqcjpa-pollynotesapibucket-1xuyfcr099i0b
+
+update function with environment variables:---------------------
+aws lambda update-function-configuration --function-name dictateFunction --environment Variables="{%env-parms%}"
+
+update code to existing function-------------
+aws lambda update-function-code --function-name dictateFunction --zip-file fileb://target/dictateFunction.jar
+
+
+update function with function handler class, memory allocation and timeout values--------------------
+aws lambda update-function-configuration --function-name dictateFunction --handler dictate.Handler --memory 500 --timeout 60
+
+invoke lambda function -------------
+aws lambda invoke --function-name dictateFunction --payload fileb://event.json response.txt
+
+create vairable for ARN --------
+aws iam list-roles --output text --query "Roles[?contains(RoleName, `lambdaPollyRole`) == `true`].Arn"
+example output: arn:aws:iam::123456789101:role/lambdaPollyRole
+
+set roleArn value ----------------
+set roleArn=<role-ARN-goes-here>
+set roleArn=arn:aws:iam::123456789101:role/lambdaPollyRole
+
+----create lambda function--------------
+aws lambda create-function --function-name createUpdateFunction ^
+--handler createupdate.Handler ^
+--runtime java11 ^
+--memory 300 ^
+--timeout 60 ^
+--role "%roleArn%" ^
+--environment Variables="{TABLE_NAME=Notes}" ^
+--zip-file fileb://createupdateFunction.jar
+
+
+
+-------delete function---------------
+aws lambda delete-function --function-name createUpdateFunction
