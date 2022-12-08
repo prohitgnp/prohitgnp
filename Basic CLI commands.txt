@@ -1,0 +1,7 @@
+c:heck version of CLI
+aws --version
+
+To see full list of pre-configured profiles:
+aws configure list-profiles
+
+
