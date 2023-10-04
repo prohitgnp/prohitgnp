@@ -1,0 +1,72 @@
+Retrive Weblogic CSF credentials using Java and Jps API
+WebLogic CSF (Credential Store Framework) holds security data of WebLogic domain like credential. A credential can hold user name and password combinations, tickets, or public key certificates.
+
+WebLogic CSF has 2 different types
+          1. Password - A password credential encapsulates a user name and a password
+          2. Generic - A generic credential encapsulates any customized data or arbitrary token.
+
+This CSF can also be used for storing credential of other applications like OIM, SOA etc. and can be used for authentication from customized applications. For example if some one wants to create an Web Service to call OIM or SOA APIs, person need to authenticate in OIM or SOA. In that scenario we can use WebLogic CSF to store and use the credential of OIM or SOA.
+
+The below code snippet will describe how to get the credential from WebLogic CSF using java. This code can be used only from the WebLogic domain application.
+
+
+private void getCredential() throws Exception{
+/*
+* Initializing JpsContext with current factory context.
+* oracle.security.jps.JpsContext can be found under jps-api.jar
+*/
+oracle.security.jps.JpsContext ctx = oracle.security.jps.JpsContextFactory.getContextFactory().getContext();
+
+final oracle.security.jps.service.credstore.CredentialStore cs = (oracle.security.jps.service.credstore.CredentialStore) ctx
+.getServiceInstance(oracle.security.jps.service.credstore.CredentialStore.class);
+
+/*
+* Below section is for getting data from CSF of type Passsowrd
+* "oracle.wsm.security" is Credential Map name
+* "SOAAdmin" is the Password CSF key name
+*/
+oracle.security.jps.service.credstore.CredentialMap cmap = cs.getCredentialMap("oracle.wsm.security");
+oracle.security.jps.service.credstore.Credential cred = cmap.getCredential("SOAAdmin");
+
+if (cred instanceof oracle.security.jps.service.credstore.PasswordCredential) {
+
+oracle.security.jps.service.credstore.PasswordCredential pcred =
+(oracle.security.jps.service.credstore.PasswordCredential)cred;
+
+char[] p = pcred.getPassword();
+String UserName = pcred.getName();
+String Password = new String(p);
+
+System.out.println("UserName : " + UserName);
+System.out.println("Password : " + Password);
+
+}
+
+/*
+* Below section is for getting data from CSF of type Generic.
+* "oracle.wsm.security" is Credential Map name
+* "oimurl" is the custom Generic CSF key name
+*/
+
+oracle.security.jps.service.credstore.CredentialMap cmapURL = cs.getCredentialMap("oracle.wsm.security");
+oracle.security.jps.service.credstore.Credential credURL = cmapURL.getCredential("oimurl");
+
+if (credURL instanceof oracle.security.jps.service.credstore.GenericCredential){
+oracle.security.jps.service.credstore.GenericCredential gcred = (oracle.security.jps.service.credstore.GenericCredential) credURL;
+
+if (gcred.getCredential() instanceof Hashtable){
+
+/*
+*This hash table contains all the key value pair of generic CSF
+*/
+Hashtable result = (Hashtable) gcred.getCredential();
+
+String URL = new String((char[]) result.get("oimurl"));
+String confPath = new String((char[]) result.get("confPath"));
+
+System.out.println("URL : "+URL);
+System.out.println("confPath : "+confPath);
+
+}
+}
+}
