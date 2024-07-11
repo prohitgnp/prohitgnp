@@ -1,0 +1,40 @@
+String ContextUserbeforeUpdate=ContextManager.getOIMUser();
+System.out.println("Context Infor Before Updating with Admin Context :  " +ContextManager.getContext());
+       System.out.println("Context OIM user Before Updating with Admin Context:  " +ContextManager.getOIMUser());
+       System.out.println("Context Sub Type Before Updating with Admin Context :  " +ContextManager.getContextSubType());
+       System.out.println("Context Type Before Updating with Admin Context :  " +ContextManager.getContextType());
+       System.out.println("Context All Values Before Updating with Admin Context :  " +ContextManager.getAllValuesFromCurrentContext());
+       System.out.println("Context Key Before Updating with Admin Context:  " +ContextManager.getContextKey());  
+
+HashMap<String,String> map = new HashMap<String,String>();
+map.put(UserManagerConstants.AttributeName.USER_KEY.getId(), "1");//Passing the User Key of XELSYSADM i.e. 1 , need to pass it as hardcoded as existing context User is not having the search capability to get this key based on Login(XELSYSADM) but anyhow 1 is usrkey for XELSYSADM always.
+
+ContextManager.setOIMUser("XELSYSADM");
+ContextManager.setUserDetails(map); //Sets the Context Details with XELSYSADM Details
+ContextManager.pushContext(null, ContextManager.ContextTypes.ADMIN, "");
+
+System.out.println("Context Infor after setting with Admin Context :  " +ContextManager.getContext());
+System.out.println("Context OIM user after setting with Admin Context:  " +ContextManager.getOIMUser());
+System.out.println("Context Sub Type after setting with Admin Context :  " +ContextManager.getContextSubType());
+System.out.println("Context Type after setting with Admin Context:  " +ContextManager.getContextType());
+System.out.println("Context All Values after setting with Admin Context:  " +ContextManager.getAllValuesFromCurrentContext());
+
+               //Perform your operations start ------   
+RoleManager roleManager= Platform.getService(RoleManager.class);
+Set<String> retKey = new HashSet<String>();
+SearchCriteria criteria;
+criteria = new SearchCriteria(RoleAttributeName.NAME.getId(), roleName, SearchCriteria.Operator.EQUAL);
+List<Role> role=roleManager.search(criteria, retKey, null);
+//Perform your operations end -------
+ContextManager.popContext();
+
+System.out.println("Context Infor after popup :  " +ContextManager.getContext());
+System.out.println("Context OIM user after popup:  " +ContextManager.getOIMUser());
+System.out.println("Context Sub Type after popup:  " +ContextManager.getContextSubType());
+System.out.println("Context Type after popup: " +ContextManager.getContextType());
+System.out.println("Context All Values after popup:  " +ContextManager.getAllValuesFromCurrentContext());
+System.out.println("Context Key after popup: " +ContextManager.getContextKey());
+
+ContextManager.setOIMUser(ContextUserbeforeUpdate);
+System.out.println("Context All Values after Setting Back the User:  " +ContextManager.getAllValuesFromCurrentContext());
+System.out.println("Context OIM user after Setting Bac
